@@ -13,14 +13,14 @@
 
 <!-- ============ INLINE LOGO (SVG, no external file needed) ============ -->
 <!-- A monogram: laurel-framed rupee mark, seal-like, on a deep ink ground -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23332d24'/%3E%3Cstop offset='1' stop-color='%232b2620'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ccircle cx='50' cy='50' r='34' fill='none' stroke='%23a8863f' stroke-width='1.6' opacity='0.85'/%3E%3Ccircle cx='50' cy='50' r='28' fill='none' stroke='%23a8863f' stroke-width='0.7' opacity='0.5'/%3E%3Ctext x='50' y='63' font-family='Georgia,serif' font-size='38' font-weight='600' fill='%23f2ede3' text-anchor='middle'%3E₹%3C/text%3E%3Cpath d='M50 16 L52.5 22 L59 22 L54 26.5 L56 33 L50 29 L44 33 L46 26.5 L41 22 L47.5 22 Z' fill='%23a8863f' opacity='0.9'/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23332d24'/%3E%3Cstop offset='1' stop-color='%232b2620'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23g2)'/%3E%3Ccircle cx='50' cy='50' r='34' fill='none' stroke='%23a8863f' stroke-width='1.6' opacity='0.85'/%3E%3Ccircle cx='50' cy='50' r='28' fill='none' stroke='%23a8863f' stroke-width='0.7' opacity='0.5'/%3E%3Ctext x='50' y='63' font-family='Georgia,serif' font-size='38' font-weight='600' fill='%23f2ede3' text-anchor='middle'%3E₹%3C/text%3E%3Cpath d='M50 16 L52.5 22 L59 22 L54 26.5 L56 33 L50 29 L44 33 L46 26.5 L41 22 L47.5 22 Z' fill='%23a8863f' opacity='0.9'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-col[...]">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop of[...]">
 
 <!-- ============ INLINE WEB MANIFEST (enables "Add to Home Screen") ============ -->
 <link rel="manifest" id="manifestLink">
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;[...]');
 
   :root {
     --paper: #f2ede3;
@@ -361,6 +361,14 @@
     cursor: pointer;
     white-space: nowrap;
   }
+
+  /* Copyright notice */
+  .copyright {
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    text-align: center;
+    margin-top: 12px;
+  }
 </style>
 </head>
 <body>
@@ -450,6 +458,8 @@
     <div id="tableContainer" class="loading">Opening the ledger…</div>
   </div>
 
+  <footer class="copyright" aria-label="copyright">© Rabeeh IP</footer>
+
 </div>
 
 <script>
@@ -465,7 +475,7 @@ const manifest = {
   orientation: "portrait",
   icons: [
     {
-      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g3' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23332d24'/%3E%3Cstop offset='1' stop-color='%232b2620'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g3)'/%3E%3Ccircle cx='50' cy='50' r='34' fill='none' stroke='%23a8863f' stroke-width='1.6' opacity='0.85'/%3E%3Ccircle cx='50' cy='50' r='28' fill='none' stroke='%23a8863f' stroke-width='0.7' opacity='0.5'/%3E%3Ctext x='50' y='63' font-family='Georgia,serif' font-size='38' font-weight='600' fill='%23f2ede3' text-anchor='middle'%3E%E2%82%B9%3C/text%3E%3Cpath d='M50 16 L52.5 22 L59 22 L54 26.5 L56 33 L50 29 L44 33 L46 26.5 L41 22 L47.5 22 Z' fill='%23a8863f' opacity='0.9'/%3E%3C/svg%3E",
+      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g3' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23332[...]",
       sizes: "100x100",
       type: "image/svg+xml",
       purpose: "any maskable"
