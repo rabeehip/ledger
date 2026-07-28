@@ -1,0 +1,18 @@
+{
+  "name": "The Ledger — Personal Finance",
+  "short_name": "The Ledger",
+  "description": "Track Cash, Savings, and Expenses in one place.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f2ede3",
+  "theme_color": "#2b2620",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "100x100",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

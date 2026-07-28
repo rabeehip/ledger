@@ -13,14 +13,12 @@
 
 <!-- ============ INLINE LOGO (SVG, no external file needed) ============ -->
 <!-- A monogram: laurel-framed rupee mark, seal-like, on a deep ink ground -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-col[...]">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop of[...]">
-
-<!-- ============ INLINE WEB MANIFEST (enables "Add to Home Screen") ============ -->
-<link rel="manifest" id="manifestLink">
+<link rel="icon" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon.svg">
+<link rel="manifest" href="/manifest.json">
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;[...]');
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
 
   :root {
     --paper: #f2ede3;
@@ -463,28 +461,6 @@
 </div>
 
 <script>
-/* ============ INLINE MANIFEST (blob URL — enables Add to Home Screen) ============ */
-const manifest = {
-  name: "The Ledger — Personal Finance",
-  short_name: "The Ledger",
-  description: "Track Cash, Savings, and Expenses in one place.",
-  start_url: ".",
-  display: "standalone",
-  background_color: "#f2ede3",
-  theme_color: "#2b2620",
-  orientation: "portrait",
-  icons: [
-    {
-      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g3' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23332[...]",
-      sizes: "100x100",
-      type: "image/svg+xml",
-      purpose: "any maskable"
-    }
-  ]
-};
-const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(manifestBlob));
-
 /* ============ SERVICE WORKER (basic offline cache) ============ */
 if ('serviceWorker' in navigator) {
   const swCode = `
