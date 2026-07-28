@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2b2620">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Ledger">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="A personal ledger for Cash, Savings, and Expenses.">
+<title>The Ledger</title>
+
+<!-- ============ INLINE LOGO (SVG, no external file needed) ============ -->
+<!-- A monogram: laurel-framed rupee mark, seal-like, on a deep ink ground -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23332d24'/%3E%3Cstop offset='1' stop-color='%232b2620'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ccircle cx='50' cy='50' r='34' fill='none' stroke='%23a8863f' stroke-width='1.6' opacity='0.85'/%3E%3Ccircle cx='50' cy='50' r='28' fill='none' stroke='%23a8863f' stroke-width='0.7' opacity='0.5'/%3E%3Ctext x='50' y='63' font-family='Georgia,serif' font-size='38' font-weight='600' fill='%23f2ede3' text-anchor='middle'%3E₹%3C/text%3E%3Cpath d='M50 16 L52.5 22 L59 22 L54 26.5 L56 33 L50 29 L44 33 L46 26.5 L41 22 L47.5 22 Z' fill='%23a8863f' opacity='0.9'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23332d24'/%3E%3Cstop offset='1' stop-color='%232b2620'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23g2)'/%3E%3Ccircle cx='50' cy='50' r='34' fill='none' stroke='%23a8863f' stroke-width='1.6' opacity='0.85'/%3E%3Ccircle cx='50' cy='50' r='28' fill='none' stroke='%23a8863f' stroke-width='0.7' opacity='0.5'/%3E%3Ctext x='50' y='63' font-family='Georgia,serif' font-size='38' font-weight='600' fill='%23f2ede3' text-anchor='middle'%3E₹%3C/text%3E%3Cpath d='M50 16 L52.5 22 L59 22 L54 26.5 L56 33 L50 29 L44 33 L46 26.5 L41 22 L47.5 22 Z' fill='%23a8863f' opacity='0.9'/%3E%3C/svg%3E">
+
+<!-- ============ INLINE WEB MANIFEST (enables "Add to Home Screen") ============ -->
+<link rel="manifest" id="manifestLink">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --paper: #f2ede3;
+    --paper-line: #d9d0bd;
+    --paper-line-soft: #e5ddca;
+    --ink: #2b2620;
+    --ink-soft: #6b6255;
+    --ink-faint: #9c927f;
+    --cash: #3a5a48;
+    --savings: #33495e;
+    --expenses: #7a3b32;
+    --gold: #a8863f;
+    --card-bg: #fbf9f3;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    background-image: repeating-linear-gradient(var(--paper) 0px, var(--paper) 27px, var(--paper-line) 28px);
+    color: var(--ink);
+    font-family: 'Source Serif 4', serif;
+    min-height: 100vh;
+    padding: max(28px, env(safe-area-inset-top)) 16px max(60px, env(safe-area-inset-bottom));
+  }
+
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 22px;
+    border-bottom: 2px solid var(--ink);
+    position: relative;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -6px; left: 50%;
+    transform: translateX(-50%);
+    width: 70px; height: 2px;
+    background: var(--gold);
+  }
+
+  .logo-mark {
+    width: 64px; height: 64px;
+    margin: 0 auto 14px;
+    display: block;
+    filter: drop-shadow(0 3px 6px rgba(43,38,32,0.25));
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 2.35rem;
+    margin: 0 0 7px;
+    letter-spacing: 0.005em;
+  }
+
+  .subtitle {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    max-width: 380px;
+    margin: 0 auto;
+    line-height: 1.4;
+  }
+
+  .balances {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+
+  .balance-card {
+    background: var(--card-bg);
+    border: 1px solid var(--paper-line);
+    border-top: 3px solid var(--card-color, var(--gold));
+    border-radius: 5px;
+    padding: 16px 10px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(43,38,32,0.06);
+    transition: transform 0.15s ease;
+  }
+
+  .balance-card .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+
+  .balance-card .amount {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .cash-card { --card-color: var(--cash); }
+  .savings-card { --card-color: var(--savings); }
+  .expenses-card { --card-color: var(--expenses); }
+
+  .total-line {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--ink-faint);
+    margin-bottom: 26px;
+    letter-spacing: 0.02em;
+  }
+
+  .total-line span { color: var(--ink); font-weight: 600; }
+
+  .entry-form {
+    background: var(--card-bg);
+    border: 1px solid var(--paper-line);
+    border-radius: 6px;
+    padding: 22px 20px 24px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(43,38,32,0.07);
+  }
+
+  .entry-form h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    margin: 0 0 16px;
+    font-weight: 600;
+  }
+
+  .mode-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 16px;
+    background: var(--paper);
+    border: 1px solid var(--paper-line);
+    border-radius: 5px;
+    padding: 4px;
+  }
+
+  .mode-btn {
+    padding: 11px 6px;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .mode-btn.active { background: var(--ink); color: var(--paper); box-shadow: 0 1px 3px rgba(43,38,32,0.2); }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 10px 10px;
+    border: 1px solid var(--paper-line);
+    border-radius: 2px;
+    background: #fdfbf6;
+    color: var(--ink);
+    font-family: 'Source Serif 4', serif;
+    font-size: 1rem;
+  }
+
+  input:focus, select:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+
+  .full-row { grid-column: 1 / -1; }
+
+  .flow-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    color: var(--ink-faint);
+    margin: -4px 0 14px;
+  }
+
+  .flow-hint b { color: var(--ink-soft); }
+
+  button.submit-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+
+  button.submit-btn:active { background: #4a4236; }
+  button.submit-btn:disabled { opacity: 0.5; }
+
+  .error-msg {
+    color: var(--expenses);
+    font-size: 0.82rem;
+    margin-top: 10px;
+    font-style: italic;
+    display: none;
+  }
+
+  .ledger-section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .entry-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 400;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .tx-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 4px;
+    border-bottom: 1px solid var(--paper-line);
+  }
+
+  .tx-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .tx-mid { min-width: 0; }
+
+  .tx-purpose {
+    font-size: 0.9rem;
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .acct-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.03em;
+    padding: 1px 6px;
+    border-radius: 2px;
+    color: #fdfbf6;
+    display: inline-block;
+    margin-top: 3px;
+  }
+
+  .tag-cash { background: var(--cash); }
+  .tag-savings { background: var(--savings); }
+  .tag-expenses { background: var(--expenses); }
+
+  .amt { font-family: 'JetBrains Mono', monospace; font-weight: 600; white-space: nowrap; font-size: 0.9rem; }
+  .amt.out { color: var(--expenses); }
+  .amt.in { color: var(--cash); }
+
+  .delete-btn {
+    background: none;
+    border: none;
+    color: var(--ink-faint);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 4px 2px 4px 8px;
+  }
+  .delete-btn:active { color: var(--expenses); }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--ink-faint);
+    font-style: italic;
+    border: 1px dashed var(--paper-line);
+    border-radius: 4px;
+  }
+
+  .install-banner {
+    display: none;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 4px;
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    font-size: 0.82rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .install-banner button {
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    padding: 7px 12px;
+    border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#332d24"/>
+          <stop offset="1" stop-color="#2b2620"/>
+        </linearGradient>
+      </defs>
+      <rect width="100" height="100" rx="20" fill="url(#logoGrad)"/>
+      <circle cx="50" cy="50" r="34" fill="none" stroke="#a8863f" stroke-width="1.6" opacity="0.85"/>
+      <circle cx="50" cy="50" r="28" fill="none" stroke="#a8863f" stroke-width="0.7" opacity="0.5"/>
+      <text x="50" y="63" font-family="Georgia, serif" font-size="38" font-weight="600" fill="#f2ede3" text-anchor="middle">₹</text>
+      <path d="M50 16 L52.5 22 L59 22 L54 26.5 L56 33 L50 29 L44 33 L46 26.5 L41 22 L47.5 22 Z" fill="#a8863f" opacity="0.9"/>
+    </svg>
+    <h1>The Ledger</h1>
+    <div class="subtitle">Money enters at Cash, and moves onward to Savings or Expenses</div>
+  </header>
+
+  <div class="install-banner" id="installBanner">
+    <span>Add The Ledger to your home screen for one-tap access.</span>
+    <button id="installBtn">Install</button>
+  </div>
+
+  <div class="balances">
+    <div class="balance-card cash-card">
+      <div class="label">Cash</div>
+      <div class="amount" id="cashBalance">—</div>
+    </div>
+    <div class="balance-card savings-card">
+      <div class="label">Savings</div>
+      <div class="amount" id="savingsBalance">—</div>
+    </div>
+    <div class="balance-card expenses-card">
+      <div class="label">Expenses</div>
+      <div class="amount" id="expensesBalance">—</div>
+    </div>
+  </div>
+
+  <div class="total-line">Total held — <span id="totalBalance">—</span></div>
+
+  <div class="entry-form">
+    <h2>Record a movement</h2>
+
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="modeAdd" data-mode="add">Add to Cash</button>
+      <button class="mode-btn" id="modeMove" data-mode="move">Move from Cash</button>
+    </div>
+
+    <div id="destRow" class="form-row" style="display:none;">
+      <div class="full-row">
+        <label for="destInput">Destination</label>
+        <select id="destInput">
+          <option value="Savings">Savings</option>
+          <option value="Expenses">Expenses</option>
+        </select>
+      </div>
+    </div>
+    <div id="flowHint" class="flow-hint" style="display:none;"></div>
+
+    <div class="form-row">
+      <div>
+        <label for="dateInput">Date</label>
+        <input type="date" id="dateInput">
+      </div>
+      <div>
+        <label for="amountInput">Amount (₹)</label>
+        <input type="number" id="amountInput" placeholder="0" min="0" step="1" inputmode="numeric">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="full-row">
+        <label for="purposeInput">Purpose</label>
+        <input type="text" id="purposeInput" placeholder="e.g. Salary, Groceries, Monthly SIP">
+      </div>
+    </div>
+    <button class="submit-btn" id="submitBtn">Add entry</button>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <div class="ledger-section">
+    <h2>Transaction history <span class="entry-count" id="entryCount"></span></h2>
+    <div id="tableContainer" class="loading">Opening the ledger…</div>
+  </div>
+
+</div>
+
+<script>
+/* ============ INLINE MANIFEST (blob URL — enables Add to Home Screen) ============ */
+const manifest = {
+  name: "The Ledger — Personal Finance",
+  short_name: "The Ledger",
+  description: "Track Cash, Savings, and Expenses in one place.",
+  start_url: ".",
+  display: "standalone",
+  background_color: "#f2ede3",
+  theme_color: "#2b2620",
+  orientation: "portrait",
+  icons: [
+    {
+      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g3' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23332d24'/%3E%3Cstop offset='1' stop-color='%232b2620'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g3)'/%3E%3Ccircle cx='50' cy='50' r='34' fill='none' stroke='%23a8863f' stroke-width='1.6' opacity='0.85'/%3E%3Ccircle cx='50' cy='50' r='28' fill='none' stroke='%23a8863f' stroke-width='0.7' opacity='0.5'/%3E%3Ctext x='50' y='63' font-family='Georgia,serif' font-size='38' font-weight='600' fill='%23f2ede3' text-anchor='middle'%3E%E2%82%B9%3C/text%3E%3Cpath d='M50 16 L52.5 22 L59 22 L54 26.5 L56 33 L50 29 L44 33 L46 26.5 L41 22 L47.5 22 Z' fill='%23a8863f' opacity='0.9'/%3E%3C/svg%3E",
+      sizes: "100x100",
+      type: "image/svg+xml",
+      purpose: "any maskable"
+    }
+  ]
+};
+const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(manifestBlob));
+
+/* ============ SERVICE WORKER (basic offline cache) ============ */
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE_NAME = 'ledger-cache-v1';
+    self.addEventListener('install', e => self.skipWaiting());
+    self.addEventListener('activate', e => self.clients.claim());
+    self.addEventListener('fetch', e => {
+      e.respondWith(
+        caches.match(e.request).then(cached => cached || fetch(e.request).then(resp => {
+          const respClone = resp.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(e.request, respClone));
+          return resp;
+        }).catch(() => cached))
+      );
+    });
+  `;
+  const swBlob = new Blob([swCode], { type: 'application/javascript' });
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {
+    // Service worker registration may fail over file:// protocol — app still works fully without it.
+  });
+}
+
+/* ============ INSTALL PROMPT ============ */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBanner').style.display = 'flex';
+});
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('installBanner').style.display = 'none';
+});
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installBanner').style.display = 'none';
+});
+
+/* ============ APP STATE — backed by localStorage ============ */
+const STORAGE_KEY = 'ledger-state-v1';
+const MODE_KEY = 'ledger-mode-v1';
+const DEST_KEY = 'ledger-dest-v1';
+let state = null;
+let mode = localStorage.getItem(MODE_KEY) || 'add';
+
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function formatRupees(n) {
+  return '₹' + Number(n).toLocaleString('en-IN');
+}
+
+function formatDateDisplay(iso) {
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      state = JSON.parse(raw);
+    } else {
+      throw new Error('no saved state');
+    }
+  } catch (e) {
+    state = { cash: 0, savings: 0, expenses: 0, transactions: [] };
+    saveState();
+  }
+  render();
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    console.error('Failed to save to localStorage', e);
+    showError('Could not save — storage may be full or blocked.');
+  }
+}
+
+function render() {
+  document.getElementById('cashBalance').textContent = formatRupees(state.cash);
+  document.getElementById('savingsBalance').textContent = formatRupees(state.savings);
+  document.getElementById('expensesBalance').textContent = formatRupees(state.expenses);
+  document.getElementById('totalBalance').innerHTML = `<span>${formatRupees(state.cash + state.savings + state.expenses)}</span>`;
+
+  const container = document.getElementById('tableContainer');
+  document.getElementById('entryCount').textContent = state.transactions.length ? `${state.transactions.length} entries` : '';
+
+  if (!state.transactions.length) {
+    container.innerHTML = '<div class="empty-state">No entries yet — the first movement is yours to make.</div>';
+    return;
+  }
+
+  const sorted = [...state.transactions].sort((a, b) => new Date(b.date) - new Date(a.date) || (b.id > a.id ? 1 : -1));
+
+  let html = '';
+  for (const tx of sorted) {
+    const tagClass = tx.account === 'Cash' ? 'tag-cash' : tx.account === 'Savings' ? 'tag-savings' : 'tag-expenses';
+    const amtClass = tx.direction === 'out' ? 'out' : 'in';
+    const sign = tx.direction === 'out' ? '−' : '+';
+    html += `<div class="tx-row">
+      <div class="tx-date">${formatDateDisplay(tx.date)}</div>
+      <div class="tx-mid">
+        <div class="tx-purpose">${tx.purpose}</div>
+        <span class="acct-tag ${tagClass}">${tx.account}</span>
+      </div>
+      <div class="amt ${amtClass}">${sign}${formatRupees(tx.amount)}</div>
+      <button class="delete-btn" data-id="${tx.id}" aria-label="Remove entry">✕</button>
+    </div>`;
+  }
+  container.innerHTML = html;
+
+  container.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => deleteEntry(btn.dataset.id));
+  });
+}
+
+function deleteEntry(id) {
+  const tx = state.transactions.find(t => t.id === id);
+  if (!tx) return;
+  const acctKey = tx.account.toLowerCase();
+  if (tx.direction === 'in') state[acctKey] -= tx.amount;
+  else state[acctKey] += tx.amount;
+  state.transactions = state.transactions.filter(t => t.id !== id);
+  saveState();
+  render();
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function hideError() {
+  document.getElementById('errorMsg').style.display = 'none';
+}
+
+function setMode(newMode, persist = true) {
+  mode = newMode;
+  if (persist) {
+    try { localStorage.setItem(MODE_KEY, mode); } catch (e) {}
+  }
+  document.getElementById('modeAdd').classList.toggle('active', mode === 'add');
+  document.getElementById('modeMove').classList.toggle('active', mode === 'move');
+  document.getElementById('destRow').style.display = mode === 'move' ? 'grid' : 'none';
+  const hint = document.getElementById('flowHint');
+  if (mode === 'add') {
+    hint.style.display = 'block';
+    hint.innerHTML = 'Money flows <b>into Cash</b> — e.g. salary, gift, refund';
+  } else {
+    hint.style.display = 'block';
+    const dest = document.getElementById('destInput').value;
+    hint.innerHTML = `Money flows <b>Cash → ${dest}</b>`;
+  }
+  document.getElementById('submitBtn').textContent = mode === 'add' ? 'Add entry' : 'Move funds';
+  hideError();
+}
+
+function handleSubmit() {
+  hideError();
+  const date = document.getElementById('dateInput').value || todayStr();
+  const amount = parseFloat(document.getElementById('amountInput').value);
+  const purpose = document.getElementById('purposeInput').value.trim();
+
+  if (!amount || amount <= 0) {
+    showError('Enter an amount greater than zero.');
+    return;
+  }
+  if (!purpose) {
+    showError('Enter a purpose for this entry.');
+    return;
+  }
+
+  const stamp = Date.now().toString(36);
+
+  if (mode === 'add') {
+    state.cash += amount;
+    state.transactions.push({ id: 't' + stamp, date, account: 'Cash', amount, purpose, direction: 'in' });
+  } else {
+    const dest = document.getElementById('destInput').value;
+    if (amount > state.cash) {
+      showError(`Cash balance is only ${formatRupees(state.cash)} — cannot move ${formatRupees(amount)}.`);
+      return;
+    }
+    state.cash -= amount;
+    if (dest === 'Savings') state.savings += amount;
+    else state.expenses += amount;
+    state.transactions.push({ id: 't' + stamp + 'a', date, account: 'Cash', amount, purpose: `${purpose} (to ${dest})`, direction: 'out' });
+    state.transactions.push({ id: 't' + stamp + 'b', date, account: dest, amount, purpose, direction: 'in' });
+  }
+
+  saveState();
+  render();
+
+  document.getElementById('amountInput').value = '';
+  document.getElementById('purposeInput').value = '';
+}
+
+document.getElementById('dateInput').value = todayStr();
+
+// Restore saved destination choice, if any
+try {
+  const savedDest = localStorage.getItem(DEST_KEY);
+  if (savedDest === 'Savings' || savedDest === 'Expenses') {
+    document.getElementById('destInput').value = savedDest;
+  }
+} catch (e) {}
+
+document.getElementById('modeAdd').addEventListener('click', () => setMode('add'));
+document.getElementById('modeMove').addEventListener('click', () => setMode('move'));
+document.getElementById('destInput').addEventListener('change', (e) => {
+  try { localStorage.setItem(DEST_KEY, e.target.value); } catch (err) {}
+  setMode('move', false);
+});
+document.getElementById('submitBtn').addEventListener('click', handleSubmit);
+
+loadState();
+setMode(mode, false); // apply restored tab on load without re-writing it
+</script>
+</body>
+</html>
